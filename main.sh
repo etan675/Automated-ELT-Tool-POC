@@ -52,8 +52,8 @@ then
     elif [ "$ACTION" == "extract" ];
     then 
         (
-            cd ./tap_mysql && 
-            docker exe2.c $TAP_HUBSPOT /bin/bash tap_hubspot.sh extract 
+            cd ./tap_hubspot && 
+            docker exec $TAP_HUBSPOT /bin/bash tap_hubspot.sh extract 
         ) |
         (
             cd ./target_csv &&
