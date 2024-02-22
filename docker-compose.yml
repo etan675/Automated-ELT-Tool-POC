@@ -1,0 +1,58 @@
+version: "3.8"
+
+networks:
+  singer-net:
+    name: singer-net
+
+services:
+  tap-mysql:
+    image: tap_mysql_image
+    hostname: tap-mysql
+    container_name: tap-mysql
+    tty: true
+    depends_on:
+      - sql-db
+    ports:
+      - "8081:8080"
+    networks:
+      - singer-net
+    volumes: 
+      - ./tap_mysql/config.json:/app/meta/config.json
+      - ./tap_mysql/properties.json:/app/meta/properties.json
+
+  target-csv:
+    image: target_csv_image
+    hostname: target-csv
+    container_name: target-csv
+    tty: true
+    ports:
+      - "8082:8080"
+    networks:
+      - singer-net
+    volumes:
+      - ./target_csv/config.json:/app/meta/config.json
+      - ./target_csv/Csvs:/app/Csvs
+    
+  sql-db:
+    image: sample_sql
+    hostname: sql-db
+    container_name: sql-db
+    tty: true
+    ports:
+      - "8083:3306"
+    networks:
+      - singer-net
+
+  tap-hubspot:
+    image: tap_hubspot_image
+    hostname: tap-hubspot
+    container_name: tap-hubspot
+    tty: true
+    ports:
+      - "8084:8080"
+    networks:
+      - singer-net
+    volumes: 
+      - ./tap_hubspot/config.json:/app/meta/config.json
+      - ./tap_hubspot/properties.json:/app/meta/properties.json
+      
